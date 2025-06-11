@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -21,7 +22,7 @@ public class Product {
     private Long product_Id;
     private String product_name;
     private String brand;
-    private LocalDate mfgDate;
+    private LocalDateTime mfgDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
