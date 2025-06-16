@@ -22,9 +22,19 @@ public class User  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;//identity
     private String name;
-    private Integer age;
+    private Integer age;//>18
+    //regex
+    private String email;
+    private String phoneNo;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Product> products=new ArrayList<>();
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "user_projects",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
+    private List<Project> projects= new ArrayList<>();
 }

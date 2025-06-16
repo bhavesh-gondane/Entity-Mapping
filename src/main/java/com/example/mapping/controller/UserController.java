@@ -28,11 +28,18 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        for (Product product : user.getProducts()) {
-            product.setUser(user);
-        }
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
+    }
+
+    @PostMapping("/testSave")
+    public void testSave(@RequestBody User user) {
+        userService.saveUser(user);
+    }
+
+    @PostMapping("/project")
+    public User createUserWithProjects(@RequestBody User user){
+        return userService.saveUserWithProjects(user);
     }
 
 
@@ -62,5 +69,17 @@ public class UserController {
     public String updateAge(@PathVariable Integer id, @RequestParam Integer age){
         userService.updateUserAge(id,age);
         return "User age updated";
+    }
+
+
+
+    @GetMapping("/projectId/{id}")
+    public List<User> getUserByProjectId(@PathVariable Long id){
+        return userService.getUserByProjectId(id);
+    }
+
+    @GetMapping("/projectName/{name}")
+    public List<User> getUserByProjectName(@PathVariable String name){
+        return userService.getUserByProjectName(name);
     }
 }
