@@ -24,6 +24,7 @@ public class User  {
     private String name;
     private Integer age;//>18
     //regex
+
     private String email;
     private String phoneNo;
 

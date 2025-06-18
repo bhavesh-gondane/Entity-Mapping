@@ -1,5 +1,6 @@
 package com.example.mapping.entity;
 
+import com.example.mapping.domain.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -24,7 +25,7 @@ public class Project {
     private String projectName;
     private String projectDepartment;
     private boolean status;
-    private Enum projectStatus;
+    private Status projectStatus;
 
     @ManyToMany(mappedBy = "projects")
     @JsonIgnore

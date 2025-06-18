@@ -1,10 +1,17 @@
 package com.example.mapping.controller;
 
+import com.example.mapping.dto.UserRequestDto;
 import com.example.mapping.entity.Product;
 import com.example.mapping.entity.User;
+import com.example.mapping.exception.DuplicatePhoneException;
+import com.example.mapping.exception.DuplicateProjectNameException;
 import com.example.mapping.service.UserService;
+import com.example.mapping.validate.RequestValidator;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
+@Validated
 public class UserController {
 //    @Autowired
     private final UserService userService;
@@ -27,9 +35,26 @@ public class UserController {
 //    }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.ok(savedUser);
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserRequestDto user) {
+//        RequestValidator validator=new RequestValidator();
+//        List<String> res=validator.validateUserCred(user);
+//        if (res.isEmpty()) {
+//            return
+//        }
+//            return ResponseEntity.ok(userService.saveUserWithProjectsAndProducts(user));
+
+//        return ResponseEntity.badRequest().body(res);
+
+        try {
+            return ResponseEntity.ok(userService.saveUserWithProjectsAndProducts(user));
+        }
+        catch (DuplicatePhoneException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+
+        catch (DuplicateProjectNameException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @PostMapping("/testSave")
