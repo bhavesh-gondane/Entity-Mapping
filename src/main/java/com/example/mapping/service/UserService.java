@@ -15,6 +15,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.validation.annotation.Validated;
@@ -142,5 +145,12 @@ public class UserService {
             project.getUsers().add(user2);
         }
         return userRepo.save(user2);
+    }
+
+
+    @Transactional
+    public Page<User> getAllUsersPage(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepo.findAll(pageable);
     }
 }

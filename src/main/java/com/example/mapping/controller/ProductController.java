@@ -4,10 +4,8 @@ import com.example.mapping.entity.Product;
 import com.example.mapping.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +19,10 @@ public class ProductController {
     @GetMapping("/user/{name}")
     public List<Product> getProductsByName(@PathVariable String name){
         return productService.getProductByUserName(name);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "10")int pageSize){
+        return ResponseEntity.ok(productService.getAllProducts(pageNo,pageSize));
     }
 }

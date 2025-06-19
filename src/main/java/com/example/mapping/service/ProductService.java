@@ -6,6 +6,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +27,12 @@ public class ProductService {
         List<Product> products = prodRepo.findByUser_Name(name);
         log.info("Products: {}", products.size());
         return products;
+    }
+
+
+    @Transactional
+    public Page<Product> getAllProducts(int pageNo,int pageSize){
+        Pageable pageable= PageRequest.of(pageNo,pageSize);
+        return prodRepo.findAll(pageable);
     }
 }

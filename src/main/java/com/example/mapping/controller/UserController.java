@@ -1,15 +1,13 @@
 package com.example.mapping.controller;
 
 import com.example.mapping.dto.UserRequestDto;
-import com.example.mapping.entity.Product;
 import com.example.mapping.entity.User;
 import com.example.mapping.exception.DuplicatePhoneException;
 import com.example.mapping.exception.DuplicateProjectNameException;
 import com.example.mapping.service.UserService;
-import com.example.mapping.validate.RequestValidator;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -106,5 +104,13 @@ public class UserController {
     @GetMapping("/projectName/{name}")
     public List<User> getUserByProjectName(@PathVariable String name){
         return userService.getUserByProjectName(name);
+    }
+
+
+
+    @GetMapping("/page")
+    public ResponseEntity<?> getAllUsersPage(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10")int pageSize){
+        Page<User> users = userService.getAllUsersPage(pageNo,pageSize);
+        return ResponseEntity.ok(users);
     }
 }
