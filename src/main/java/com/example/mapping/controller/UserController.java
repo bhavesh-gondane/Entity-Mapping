@@ -20,7 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Validated
 public class UserController {
-//    @Autowired
+    //    @Autowired
     private final UserService userService;
 
 //    public UserController(UserService userService) {
@@ -45,12 +45,9 @@ public class UserController {
 
         try {
             return ResponseEntity.ok(userService.saveUserWithProjectsAndProducts(user));
-        }
-        catch (DuplicatePhoneException ex){
+        } catch (DuplicatePhoneException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        catch (DuplicateProjectNameException ex){
+        } catch (DuplicateProjectNameException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
@@ -61,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/project")
-    public User createUserWithProjects(@RequestBody User user){
+    public User createUserWithProjects(@RequestBody User user) {
         return userService.saveUserWithProjects(user);
     }
 
@@ -72,45 +69,43 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable Integer id){
+    public Optional<User> getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Integer id){
+    public String deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return "User deleted successfully";
     }
 
     @PutMapping("/{id}")
-    public String updateUser(@PathVariable Integer id, @RequestBody User user){
-        userService.updateUser(id,user);
+    public String updateUser(@PathVariable Integer id, @RequestBody User user) {
+        userService.updateUser(id, user);
         return "User updated successfully";
     }
 
     @PatchMapping("/{id}")
-    public String updateAge(@PathVariable Integer id, @RequestParam Integer age){
-        userService.updateUserAge(id,age);
+    public String updateAge(@PathVariable Integer id, @RequestParam Integer age) {
+        userService.updateUserAge(id, age);
         return "User age updated";
     }
 
 
-
     @GetMapping("/projectId/{id}")
-    public List<User> getUserByProjectId(@PathVariable Long id){
+    public List<User> getUserByProjectId(@PathVariable Long id) {
         return userService.getUserByProjectId(id);
     }
 
     @GetMapping("/projectName/{name}")
-    public List<User> getUserByProjectName(@PathVariable String name){
+    public List<User> getUserByProjectName(@PathVariable String name) {
         return userService.getUserByProjectName(name);
     }
 
 
-
     @GetMapping("/page")
-    public ResponseEntity<?> getAllUsersPage(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10")int pageSize){
-        Page<User> users = userService.getAllUsersPage(pageNo,pageSize);
+    public ResponseEntity<?> getAllUsersPage(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+        Page<User> users = userService.getAllUsersPage(pageNo, pageSize);
         return ResponseEntity.ok(users);
     }
 }

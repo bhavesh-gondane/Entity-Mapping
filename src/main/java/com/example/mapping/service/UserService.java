@@ -1,6 +1,5 @@
 package com.example.mapping.service;
 
-import com.example.mapping.dto.ProductRequestDto;
 import com.example.mapping.dto.ProjectRequestDto;
 import com.example.mapping.dto.UserRequestDto;
 import com.example.mapping.entity.Product;
@@ -8,31 +7,35 @@ import com.example.mapping.entity.Project;
 import com.example.mapping.entity.User;
 import com.example.mapping.exception.DuplicatePhoneException;
 import com.example.mapping.exception.DuplicateProjectNameException;
+import com.example.mapping.executor.ExecutorMultiThreading;
 import com.example.mapping.repository.ProjectRepository;
 import com.example.mapping.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
-
+@Slf4j
 public class UserService {
     @Autowired
     private final UserRepository userRepo;
     private  final  ProjectRepository projectRepository;
     private final ModelMapper modelMapper;
+    private final ExecutorMultiThreading multiThreading;
 
 //    public UserService(UserRepository userRepository) {
 //        this.userRepo = userRepository;
@@ -144,10 +147,15 @@ public class UserService {
         for(Project project : user2.getProjects()){
             project.getUsers().add(user2);
         }
-        return userRepo.save(user2);
+        User savedUser = userRepo.save(user2);
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Future<?> future1= executorService.submit(()->{log.info("saved user name "+savedUser.getName());});
+//        Future<String> future2 = executorService.submit(()->"Bhavesh");
+        executorService.shutdown();
+
+        return savedUser;
     }
-
-
     @Transactional
     public Page<User> getAllUsersPage(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
